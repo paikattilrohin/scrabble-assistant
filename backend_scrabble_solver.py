@@ -94,36 +94,25 @@ def get_starting_non_empty_letter_row(current_position, row, row_index):
     return i
 
 
-def get_starting_non_empty_letter_col(current_position, row, row_index):
-    pass
-
-
 def get_word_score(row, col, letter_score, multiplier, matrix_details, current_position):
-    ## handle one letter
-    ## handle double adding of letter and word with special value
     given_row = row
     score = 0
     matrix_size = len(current_position[0])
     if not matrix_details[row][col].letter_exists:
         while row - 1 >= 0 and current_position[row - 1][col] != ' ':
-            # score += letters_and_val[current_position[row - 1][i]]
             row -= 1
         x = row
         while x < matrix_size and current_position[x][col] != ' ':
             if not x == given_row:
                 score += letters_and_val[current_position[x][col]]
             x += 1
-        # while row + 1 < len(current_position[0]) and current_position[row + 1][i] != ' ':
-        #     score += letters_and_val[current_position[row + 1][i]]
-        #     row += 1
-    # if score == letter_score:
-    #     return 0
+
     if score != 0:
         return (score + letter_score) * multiplier
     else:
         return 0
 
-# def calculate_score(current_position, matrix_details, row, placed_word_start_index, placed_word_end_index):
+
 def calculate_score(current_position, matrix_details, row, placed_word_start_index, placed_word_end_index, test):
     total_multiplier = 1
     total_score = 0
@@ -134,7 +123,6 @@ def calculate_score(current_position, matrix_details, row, placed_word_start_ind
         pprint(current_position)
 
     i = get_starting_non_empty_letter_row(current_position, row, placed_word_start_index)
-    # for i in range(placed_word_start_index, placed_word_end_index + 1):
     while i < matrix_size and current_position[row][i] != " ":
         if matrix[row][i] in special_squares and not matrix_details[row][i].letter_exists:
             total_score += special_squares[matrix[row][i]] * letters_and_val[current_position[row][i]]
@@ -217,7 +205,7 @@ def print_new_word(optimal_answer, matrix_squares_details):
                 print(optimal_answer[i][j] + " ", end=" ")
         print(" ] ")
 
-# def check_word_horizontally(current_position, row, placed_word_start_index):
+
 def check_word_horizontally(current_position, row, placed_word_start_index, test):
     size = len(current_position[0])
     word_start_i = placed_word_start_index
@@ -236,24 +224,15 @@ def check_word_horizontally(current_position, row, placed_word_start_index, test
     return False
 
 
-### delete
 def check_if_all_valid_words_formed(current_position, placed_word_start_index, placed_word_end_index, row,
                                     matrix_squares_details, test):
-    # def check_if_all_valid_words_formed(current_position, placed_word_start_index, placed_word_end_index, row, matrix_squares_details
-    #                                     ):
+
     if check_word_horizontally(current_position, row, placed_word_start_index, test):
         size = len(current_position[0])
         word_start_i = placed_word_start_index
         while word_start_i - 1 >= 0 and word_start_i < size and current_position[row][word_start_i - 1] != " ":
             word_start_i -= 1
-
-        #### delete afterwards
-        # if test:
-        #     flip_matrix(current_position)
-        #     pprint(current_position)
-        #     flip_matrix(current_position)
         while word_start_i < size and current_position[row][word_start_i] != " ":
-            #### this is to handle cases where PERF is placed which isn't a valid word
             if not matrix_squares_details[row][word_start_i].letter_exists:
                 if not check_word_vertically(current_position, row, word_start_i, test):
                     return False
@@ -294,7 +273,6 @@ def place_horizontally(current_position, playable_rows_and_empty_space, letters,
     global max_possible_score_horizontal
     global optimal_answer_vertical
     global max_possible_score_vertical
-    ###------------ delete later
     test_flag = False
     test_word = "".join(letters).lower()
     if test_word == "":
@@ -326,21 +304,13 @@ def place_horizontally(current_position, playable_rows_and_empty_space, letters,
                         else:
                             row_index += 1
                             touching_existing_word = True
-                    ### ---  delete
                     if test_flag and touching_existing_word and word_successfully_placed:
-                        # flip_matrix(current_position)
                         pprint(current_position)
-                        # flip_matrix(current_position)
 
                     if touching_existing_word and word_successfully_placed:
-                        #### ----delete
                         if check_if_all_valid_words_formed(current_position, placed_word_start_index,
                                                            placed_word_end_index, row, matrix_squares_details,
                                                            test_flag):
-                            # if check_if_all_valid_words_formed(current_position, placed_word_start_index,
-                            #                                    placed_word_end_index, row):
-                            if test_flag:
-                                print("---------------REACHED HERE----------------")
 
                             score = calculate_score(current_position, matrix_squares_details, row,
                                                     placed_word_start_index, placed_word_end_index, test_flag)
@@ -350,17 +320,14 @@ def place_horizontally(current_position, playable_rows_and_empty_space, letters,
                                 optimal_answer_horizontal = copy.deepcopy(current_position)
                                 print("max possible score with following is  ", max_possible_score_horizontal, flipped)
                                 pprint(optimal_answer_horizontal)
-                                # print_new_word(optimal_answer_horizontal, matrix_squares_details)
 
                             if flipped and score > max_possible_score_vertical:
                                 max_possible_score_vertical = score
-                                # copy_matrix(current_position, flipped)
                                 flip_matrix(current_position)
                                 optimal_answer_vertical = copy.deepcopy(current_position)
                                 flip_matrix(current_position)
                                 print("max possible score with following is  ", max_possible_score_vertical, flipped)
                                 pprint(optimal_answer_vertical)
-                                # print_new_word(optimal_answer_vertical, matrix_squares_details)
 
                     for i in range(len(row_copy)):
                         current_position[row][i] = row_copy[i]

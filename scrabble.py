@@ -1,5 +1,5 @@
 import pygame
-from matrix_values import matrix, font_path, happy_birthday_mp3, happy_birthday_mp4, save_scrabble_matrix_dir
+from matrix_values import matrix, font_path, save_scrabble_matrix_dir
 import backend_scrabble_solver
 # import threading
 from queue import Queue
@@ -22,7 +22,6 @@ class Grid:
                       range(rows)]
         self.width = width
         self.height = height
-        # self.model = None
         self.selected_box = None
         self.selected = False
         self.selected_matrix = 1
@@ -41,7 +40,6 @@ class Grid:
         self.count_changes += 1
         if self.count_changes > self.save_after_no_of_changes:
             self.count_changes = 0
-            # self.update_current_position(self.saved_board_detials['text_box_text'])
             self.write_file()
 
     def clear(self):
@@ -49,7 +47,6 @@ class Grid:
         self.cubes[row][col].set(" ")
         if self.count_changes > self.save_after_no_of_changes - 1:
             self.count_changes = 0
-            # self.update_current_position(self.saved_board_detials['text_box_text'])
             self.write_file()
 
     def draw(self, win, thick=1):
@@ -75,8 +72,6 @@ class Grid:
         for i in range(self.rows):
             for j in range(self.cols):
                 self.cubes[i][j].value = self.saved_board_detials['current_position'][i][j]
-                # print(type(self.saved_board_detials))
-                # self.cubes[i][j].value = self.saved_board_detials.get('current_position')[i][j]
                 self.cubes[i][j].new_word_letter = " "
 
     def write_file(self):
@@ -106,9 +101,6 @@ class Grid:
                 self.cubes[i][j].new_word_letter = " "
 
     def touch_all_matrix_files(self):
-        # saved_board_detials = dict()
-        # saved_board_detials["current_position"] =  [[" " for i in range(self.rows)] for j in range(self.cols)],
-        # saved_board_detials["text_box_text"] = ""
 
         saved_board_details = {
             "current_position" : [[" " for i in range(self.rows)] for j in range(self.cols)],
@@ -151,9 +143,6 @@ class Cube:
         x = self.col * gap
         y = self.row * gap
 
-        # if self.temp != 0 and self.value == " ":
-        #     text = fnt.render(str(self.temp), 1, (128,128,128))
-        #     win.blit(text, (x+5, y+5))
         if self.new_word_letter != " ":
             text = fnt.render(str(self.new_word_letter), 1, (255, 0, 0))
             win.blit(text, (x + (gap / 2 - text.get_width() / 2), y + (gap / 2 - text.get_height() / 2)))
@@ -212,7 +201,6 @@ def redraw_window(win, board, pastel = False ):
         win.fill((222,165,164))
     else:
         win.fill((255, 255, 255))
-    # Draw grid and board
     board.draw(win)
 
 
@@ -232,11 +220,9 @@ window_size = (600, 650)
 textbox_size = 50
 rows = 15
 columns = 15
-pygame.mixer.init()
-pygame.mixer.music.load(happy_birthday_mp3)
 win = pygame.display.set_mode(window_size)
 
-pygame.display.set_caption("Rohin Scrabble Solver")
+pygame.display.set_caption("Paikro Scrabble Solver")
 board = Grid(rows, columns, window_size[0], window_size[0], matrix)
 board.touch_all_matrix_files()
 board.read_file()
@@ -247,17 +233,16 @@ key = None
 run = True
 pink = False
 
+
 def reinitialize():
     global window_size, textbox, rows, columns, win, board, textbox, key, run
     window_size = (600, 650)
     textbox_size = 50
     rows = 15
     columns = 15
-    pygame.mixer.init()
-    pygame.mixer.music.load(happy_birthday_mp3)
     win = pygame.display.set_mode(window_size)
 
-    pygame.display.set_caption("Rohin Scrabble Solver")
+    pygame.display.set_caption("Paikro Scrabble Solver")
     board = Grid(rows, columns, window_size[0], window_size[0], matrix)
     board.touch_all_matrix_files()
     board.read_file()
@@ -268,9 +253,6 @@ def reinitialize():
 
 
 def main():
-    # for i in range(rows):
-    #     for j in range(columns):
-    #         board.cubes[i][j].value = backend_scrabble_solver.test_position[i][j]
     global window_size, textbox, rows, columns, win, board, textbox, key, run
     while run:
 
@@ -469,12 +451,9 @@ def main():
 
                     if event.key == pygame.K_RETURN:
                         board.update_current_position(textbox.user_text)
-                        # t = threading.Thread(target=get_answer, args=(board.saved_board_detials['current_position'], textbox.user_text))
-                        # t.start()
-                        # t.join()
-                        # placed_word_matrix = que.get()
                         print("\n\n\n")
-                        placed_word_matrix = backend_scrabble_solver.solve(board.saved_board_detials['current_position'], textbox.user_text)
+                        placed_word_matrix = backend_scrabble_solver.solve(board.saved_board_detials['current_position']
+                                                                           , textbox.user_text)
                         for i in range(rows):
                             for j in range(columns):
                                 if board.cubes[i][j].value == " ":
