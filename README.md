@@ -1,4 +1,4 @@
-# Scrabble_Assistant
+# Scrabble Assistant
 Scrabble assistant written using pygame gives the maximum possible scoring Scrabble word
 
 https://user-images.githubusercontent.com/39897345/153726942-e28a7429-8586-4450-84af-f7f0fd53e385.mp4
